@@ -17,5 +17,15 @@ example, (1 2) or (1 . (2 . NIL)) will be store internally as the following bina
                 / \
                2  NIL
 
-  [need more]
+where 1 and 2 can be similar binary trees as well.  All data, including code, is represented as an 
+s_expression and the output is also printed as s_expressions.
+
+  The interpreter class also contains a 'symbol_table' object which defines the scope and bindings
+of identifier's values.  It works like a stack, with the most recent scope on top, and allowing the
+re-binding of values to an identifier in a higher scope.  The most recent valid binding is what is
+used when looking up the value of an identifier.  That is to say, if x is bound to the value '3' at
+the bottom of the stack and through a function call it's value is changed to '2', inside the function 
+'2' will be returned.  But once the function exits, '3' is again the value of x.
+
+  [need more, probably just another paragraph]
 
