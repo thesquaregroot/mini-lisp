@@ -5,10 +5,11 @@
 #include <map>
 #include <string>
 #include "./token.h"
+#include "./var.h"
 
 class symbol_table {
   private:
-    std::vector<std::map<std::string, int> > vars;
+    std::vector<std::map<std::string, var> > vars;
 
   public:
     // Add another level to the stack.
@@ -16,7 +17,7 @@ class symbol_table {
     // Remove the top of the stack.
     void pop();
     // Returns the value that the given variable name is bound to. 
-    int get(std::string);
+    var get(std::string);
     // Create a binding of a variable name to a value in the top-most scope of the stack. 
     void set(std::string, std::string);
 };
