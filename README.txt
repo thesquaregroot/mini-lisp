@@ -1,4 +1,8 @@
-Andrew Groot
+//
+// CSE 755 Lisp Interpreter
+//
+//   Author: Andrew Groot
+//
 
 Building and Running
 --------------------
