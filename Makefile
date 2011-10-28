@@ -30,3 +30,6 @@ $(EXE) : $(OBJS) # depends on all object files
 src/%.o : src/%.cpp
 	$(COMPILE) -o $@ $<
 
+clean:
+	rm -f src/*.o ./lisp
+
