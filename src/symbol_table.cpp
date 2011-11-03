@@ -24,11 +24,3 @@ void symbol_table::set(string name, s_expression* value) {
     (vars.back())[name] = value;
 }
 
-void symbol_table::define(string name, s_expression* params, s_expression* body) {
-    
-}
-
-s_expression* symbol_table::call(string name) {
-    
-}
-
