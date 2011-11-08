@@ -1,6 +1,7 @@
 #ifndef S_EXPRESSION_H
 #define S_EXPRESSION_H 1
 
+#include <string>
 #include "symbol_table.h"
 #include "function_table.h"
 #include "var_types.h"
@@ -9,7 +10,7 @@
 class s_expression {
   private:
     var_type type;
-    int value;
+    std::string lex_val;
     s_expression* left;
     s_expression* right;
 
@@ -30,8 +31,6 @@ class s_expression {
     s_expression& operator[](int);
     // Print an appropriate representation of this s_expression.
     void print();
-    // Return the value of this s_expression given a symbol_table and function_table.
-    s_expression& value(symbol_table, function_table);
 };
 
 #endif
