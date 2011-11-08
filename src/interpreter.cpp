@@ -8,7 +8,7 @@ using namespace std;
 
 /// private
 s_expression* interpreter::get_exp() {
-    return symbols.
+    return NULL;
 }
 
 /// public
@@ -17,10 +17,10 @@ interpreter::interpreter(tokenizer& tokens) {
 }
 
 bool interpreter::exec() {
-
+    return false;
 }
 
 string interpreter::error() {
-    return ("ERROR: line " + itos(ins.lineno) + ": " + err_msg);
+    return ("ERROR: line " + itos(ins.lineno()) + ": " + err_msg);
 }
 

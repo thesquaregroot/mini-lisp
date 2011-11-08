@@ -4,7 +4,7 @@
 using namespace std;
 
 // var_type type;
-// std::string lexval;
+// std::string lex_val;
 // int value;
 // s_expression* lst;
 // s_expression* rst;
@@ -41,19 +41,19 @@ s_expression* s_expression::right() {
 }
 
 void s_expression::set(token t) {
-    lexval = t.lexval;
-    if (t.lexval == "T") {
+    lex_val = t.lex_val;
+    if (t.lex_val == "T") {
         type = BOOL;
         value = 1;
-    } else if (t.lexval == "NIL") {
+    } else if (t.lex_val == "NIL") {
         type = BOOL;
         value = 0;
-    } else if (t.lexval == "0" || atoi(t.lexval.c_str()) != 0) {
+    } else if (t.lex_val == "0" || atoi(t.lex_val.c_str()) != 0) {
         type = INT;
-        value = atoi(t.lexval.c_str());
+        value = atoi(t.lex_val.c_str());
     } else {
         type = CALL;
-        lexval = t.lexval;
+        lex_val = t.lex_val;
     }
 }
 

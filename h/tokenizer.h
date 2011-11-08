@@ -7,13 +7,16 @@
 
 class tokenizer {
   private:
-    std::istream ins;
+    std::istream* ins;
     std::string buffer;
     char look_ahead;
+    int line;
 
   public:
-    tokenizer(std::istream&);
+    tokenizer();
+    tokenizer(std::istream*);
     token get();
+    int lineno();
 };
 
 #endif
