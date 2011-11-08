@@ -6,38 +6,38 @@ using namespace std;
 // var_type type;
 // std::string lexval;
 // int value;
-// s_expression* left;
-// s_expression* right;
+// s_expression* lst;
+// s_expression* rst;
 
 ///  constructors
 s_expression::s_expression() {
-    left = NULL;
-    right = NULL;
+    lst = NULL;
+    rst = NULL;
 }
 
 s_expression::s_expression(token t) {
-    left = new s_expression();
-    left->set(t);
-    right = NULL;
+    lst = new s_expression();
+    lst->set(t);
+    rst = NULL;
 }
 
 s_expression::s_expression(token t, s_expression* list) {
-    left = new s_expression(t);
-    right = list;
+    lst = new s_expression(t);
+    rst = list;
 }
 ///  destructor
 s_expression::~s_expression() {
-    delete left;
-    delete right;
+    delete lst;
+    delete rst;
 }
 
 // methods
 s_expression* s_expression::left() {
-    return left;
+    return lst;
 }
 
 s_expression* s_expression::right() {
-    return right;
+    return rst;
 }
 
 void s_expression::set(token t) {
@@ -58,30 +58,30 @@ void s_expression::set(token t) {
 }
 
 bool s_expression::is_leaf() {
-    return (left == NULL && right == NULL);
+    return (lst == NULL && rst == NULL);
 }
 
 s_expression* s_expression::operator[](int i) {
     if (i == 0) {
-        return left;
+        return lst;
     } else {
-        return (*right)[i-1];
+        return (*rst)[i-1];
     }
 }
 
 int s_expression::size() {
-    if (right == NULL) {
-        if (left == NULL) {
+    if (rst == NULL) {
+        if (lst == NULL) {
             return 0;
         }
         return 1;
     } else {
-        return (1 + right->size());
+        return (1 + rst->size());
     }
 }
 
 void s_expression::print() {
-    if (left == NULL && right == NULL) {
+    if (lst == NULL && rst == NULL) {
         if (var_type == BOOL) {
             cout << value?"T":"NIL";
         } else {
@@ -91,10 +91,10 @@ void s_expression::print() {
         cout << value;
     } else {
         cout << '(';
-        left->print();
-        if (right != NULL) {
+        lst->print();
+        if (rst != NULL) {
             cout << ' ';
-            right->print();
+            rst->print();
         }
         cout << ')';
     }

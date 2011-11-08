@@ -12,7 +12,7 @@ class tokenizer {
     char look_ahead;
 
   public:
-    tokenizer(istream*);
+    tokenizer(std::istream&);
     token get();
 };
 

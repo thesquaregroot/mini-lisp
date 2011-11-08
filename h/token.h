@@ -2,7 +2,7 @@
 #define TOKEN_H 1
 
 #include <string>
-#include "token_types.h"
+#include "token_type.h"
 
 struct token {
   std::string lex_val;

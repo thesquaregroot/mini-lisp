@@ -4,15 +4,15 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "./token.h"
 #include "./s_expression.h"
+#include "./token.h"
 
 class symbol_table {
   private:
     // variables
     std::vector<std::map<std::string, s_expression*> > vars;
     // functions
-    std::map<std::string, vector<std::string> > params;
+    std::map<std::string, std::vector<std::string> > params;
     std::map<std::string, s_expression> bodies;
 
   public:

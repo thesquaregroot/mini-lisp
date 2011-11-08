@@ -4,10 +4,12 @@
 //   Author: Andrew Groot
 //
 
+--------------------
 Building and Running
 --------------------
     This project can be successfully build with 'gmake' and executed with './lisp < infile > outfile'.
 
+------------------
 Design Description
 ------------------
     This intepreter uses an object-oriented recursive descent structure.  The 'interpereter' class
@@ -28,13 +30,34 @@ s_expression and the output is also printed as s_expressions.
 of identifier's values.  It works like a stack, with the most recent scope on top, and allowing the
 re-binding of values to an identifier in a higher scope.  The most recent valid binding is what is
 used when looking up the value of an identifier.  That is to say, if x is bound to the value '3' at
-the bottom of the stack and through a function call it's value is changed to '2', inside the function 
-'2' will be returned.  But once the function exits, '3' is again the value of x.
+the bottom of the stack and through a function call it's value is changed to '2', inside the
+function '2' will be returned.  But once the function exits, '3' is again the value of x.
 
-    Finally, the interpreter class has a function_table which serves as an accessor for function
-parameter names and bodies.  Since functions can only be declared in the outer-most scope, this 
-setup forces their global visibility and provides simple storage and retrieval of the functions
-specifics.
+    The symbol_table class also serves as an accessor for function parameter lists and bodies.
+Since functions can only be declared in the outer-most scope, this setup forces their global
+visibility and provides simple storage and retrieval of the function's specifics.  
 
   [need more, probably just another paragraph]
+
+------------
+Grammar Used
+------------
+    The following grammar, based on the one given in the project description, represent the set of
+all syntactically valid s-expressions (but not necessarily semantically valid) and is used by this
+interpreter to generate s_expression objects:
+
+    <start> ::= <expr>
+
+    <expr>  ::= ( <list> )
+              | atom
+
+    <list>  ::= <expr>
+              | <expr> <list>
+              | <expr> . <list>
+              | ε
+
+    This grammar can be seen as a simplification of the grammar in the project description as it
+contains fewer non-terminal symbols.  Furthermore, the structure of an s-expression, with element
+concatenated either by spaces or explicit periods, can be seen a bit more clearly in its rules.
+
 

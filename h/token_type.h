@@ -1,7 +1,7 @@
-#ifndef TOKEN_TYPES
-#define TOKEN_TYPES 1
+#ifndef TOKEN_TYPE_H
+#define TOKEN_TYPE_H 1
 
-enum token_types {
+enum token_type {
     ATOM,
     L_PAREN,
     R_PAREN,
