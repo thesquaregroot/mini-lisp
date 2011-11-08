@@ -1,0 +1,12 @@
+Makefile.bak
+src/*.tab.cpp
+h/*.tab.h
+src/*.output
+src/lex.*.c
+src/lex.*.c
+src/*.o
+*.txt
+!README.txt
+!test/*.txt
+./lisp
+*~
