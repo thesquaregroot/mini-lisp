@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <cstdlib>
 #include "../h/s_expression.h"
 using namespace std;
@@ -25,6 +26,12 @@ s_expression::s_expression(token t, s_expression* list) {
     lst = new s_expression(t);
     rst = list;
 }
+
+s_expression::s_expression(s_expression* l, s_expression* r) {
+    lst = l;
+    rst = r;
+}
+
 ///  destructor
 s_expression::~s_expression() {
     delete lst;
@@ -82,7 +89,7 @@ int s_expression::size() {
 
 void s_expression::print() {
     if (lst == NULL && rst == NULL) {
-        if (var_type == BOOL) {
+        if (type == BOOL) {
             cout << value?"T":"NIL";
         } else {
             // INT

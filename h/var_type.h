@@ -3,7 +3,8 @@
 
 enum var_type {
     INT,
-    BOOL
+    BOOL,
+    CALL
 };
 
 #endif

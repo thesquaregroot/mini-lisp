@@ -10,10 +10,15 @@ class interpreter {
   private:
     symbol_table symbols;
     tokenizer ins;
+    token err_tkn;
     std::string err_msg;
 
     // Build an s_expression out of the string of tokens
-    s_expression* get_exp();
+    s_expression* get_exp(token);
+    // Get a 'list' within an expression.
+    //   This is related to the revised grammar.
+    //   See README for more details.
+    s_expression* get_list(token);
 
   public:
     // construct with a tokenizer

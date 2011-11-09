@@ -6,8 +6,8 @@ using namespace std;
 // std::map<std::string, s_expression*> bodies;
 
 // public
-s_expression* symbol_table::get(string name) {
-    for (int i=vars.size-1; i>=0; i--) {
+s_expression* symbol_table::get(string& name) {
+    for (int i=vars.size()-1; i>=0; i--) {
         if (vars[i].count(name) > 0) {
             return (vars[i])[name];
         }
@@ -15,7 +15,7 @@ s_expression* symbol_table::get(string name) {
     return NULL;
 }
 
-void symbol_table::set(string name, s_expression* value) {
+void symbol_table::set(string& name, s_expression* value) {
     (vars.back())[name] = value;
 }
 
@@ -29,6 +29,6 @@ void symbol_table::pop() {
 }
 
 s_expression* symbol_table::eval(s_expression*) {
-    
+    return NULL;    
 }
 

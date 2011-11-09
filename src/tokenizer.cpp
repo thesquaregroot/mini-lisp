@@ -25,22 +25,25 @@ char tokenizer::next_non_ws() {
 // public
 tokenizer::tokenizer() {
     ins = &cin;
+    line = 1;
 }
 
 tokenizer::tokenizer(istream* in) {
     ins = in;
+    line = 1;
 }
 
 token tokenizer::get() {
     token t;
-    lookahead = next_non_ws();
+    look_ahead = next_non_ws();
     if (ins->eof()) {
         t.type = F_END;
         return t;
     }
+    bool one_or_more = false;
     // if digit, test against 1, else use the actual lookhead
     //   this allows for a slight optimization after the +/- cases.
-    switch(isdigit(lookahead)?'1':lookahead) {
+    switch(isdigit(look_ahead)?'1':look_ahead) {
         case '(':
             t.type = L_PAREN;
             t.lex_val = '(';
@@ -56,51 +59,51 @@ token tokenizer::get() {
         case '-':
         case '+':
             // save +/-
-            t.lex_val += lookahead;
+            t.lex_val += look_ahead;
         case '1':
             // expect a number afterward
-            bool one_or_more = false;
-            while (!ins->eof() && isdigit(lookahead = ins->get())) {
-                t.lex_val += lookahead;
+            while (!ins->eof() && isdigit(look_ahead = ins->get())) {
+                t.lex_val += look_ahead;
                 one_or_more = true;
             }
-            if (ins->eof()) {
-                t.type = F_END;
-                return t;
+            if ((isspace(look_ahead) || look_ahead == ')' || ins->eof()) && one_or_more) {
+                // return the extra character if not at the end of the stream
+                if (ins->eof()) ins->unget();
+                // We have an INT
+                t.type = ATOM;
             } else {
-                if ((isspace(lookahead) || lookahead == ')') && one_or_more) {
-                    ins->unget();
-                    t.type = ATOM;
-                } else {
-                    // invalid character or +/- without digits
-                    t.lex_val += lookahead;
-                    t.type = ERROR;
-                }
+                // invalid character after number or +/- without digits
+                t.lex_val += look_ahead;
+                t.type = ERROR;
             }
             break;
         default:
-            if (isalpha(lookahead)) {
-                t.lex_val += lookahead;
-                while (!ins->eof() && isalnum(lookahead = ins->get())) {
-                    t.lex_val += lookahead;
+            if (isalpha(look_ahead)) {
+                t.lex_val += look_ahead;
+                while (!ins->eof() && isalnum(look_ahead = ins->get())) {
+                    t.lex_val += look_ahead;
                 }
-                if (ins->eof()) {
-                    t.type = F_END;
+                if ((isspace(look_ahead) || look_ahead == ')' || ins->eof()) && one_or_more) {
+                    // return the extra character if not at the end of the stream
+                    if (ins->eof()) ins->unget();
+                    // we have an identifier (function call)
+                    t.type = ATOM;
                 } else {
-                    if ((isspace(lookahead) || lookahead == ')') && one_or_more) {
-                        ins->unget();
-                        t.type = ATOM;
-                    } else {
-                        t.lex_val += lookahead;
-                        t.type = ERROR;
-                    }
+                    // invalid identifier
+                    t.lex_val += look_ahead;
+                    t.type = ERROR;
                 }
             } else {
-                t.lex_val += lookahead;
+                // Invalid character
+                t.lex_val += look_ahead;
                 t.type = ERROR;
             }
             break;
     }
     return t;
+}
+
+int tokenizer::lineno() {
+    return line;
 }
 

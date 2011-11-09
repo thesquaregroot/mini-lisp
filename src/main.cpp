@@ -7,7 +7,7 @@ int main() {
     interpreter interpret(tokens);
 
     if (!interpret.exec()) {
-        cout << interpret.error();
+        cout << interpret.error() << endl;
         return 1;
     }
     return 0;

@@ -16,7 +16,7 @@ COMPILE = $(CXX) $(CXXFLAGS) -c
 EXE = lisp
 
 # All object files
-OBJS = src/interpreter.o  src/itos.o  src/main.o  src/s_expression.o src/symbol_table.o src/tokenizer.o
+OBJS = o/interpreter.o  o/itos.o  o/main.o  o/s_expression.o o/symbol_table.o o/token.o o/tokenizer.o
 
 # The first target is the one that is executed when you invoke
 # "make". The line describing the action starts with <TAB>. Variable
@@ -27,23 +27,22 @@ $(EXE) : $(OBJS) # depends on all object files
 
 # An object file is dependent on the corresponding source file
 
-src/%.o : src/%.cpp
+o/%.o : src/%.cpp
 	$(COMPILE) -o $@ $<
 
 clean:
-	rm -f src/*.o ./lisp
+	rm -f o/*.o ./lisp
+	rmdir o
 
 # DO NOT DELETE
 
-src/interpreter.o: h/itos.h h/interpreter.h h/symbol_table.h
-src/interpreter.o: h/./s_expression.h h/./var_type.h h/./token.h
-src/interpreter.o: h/./token_type.h h/./token.h h/tokenizer.h
+src/interpreter.o: h/itos.h h/interpreter.h h/symbol_table.h h/s_expression.h
+src/interpreter.o: h/var_type.h h/token.h h/token_type.h h/tokenizer.h
 src/itos.o: h/itos.h
-src/main.o: h/interpreter.h h/symbol_table.h h/./s_expression.h
-src/main.o: h/./var_type.h h/./token.h h/./token_type.h h/./token.h
-src/main.o: h/tokenizer.h
-src/s_expression.o: h/s_expression.h h/symbol_table.h h/./s_expression.h
-src/s_expression.o: h/./var_type.h h/./token.h h/./token_type.h h/./token.h
-src/symbol_table.o: h/symbol_table.h h/./s_expression.h h/symbol_table.h
-src/symbol_table.o: h/./token.h h/./var_type.h h/./token.h h/./token_type.h
-src/tokenizer.o: h/tokenizer.h h/./token.h h/./token_type.h
+src/main.o: h/interpreter.h h/symbol_table.h h/s_expression.h h/var_type.h
+src/main.o: h/token.h h/token_type.h h/tokenizer.h
+src/s_expression.o: h/s_expression.h h/var_type.h h/token.h h/token_type.h
+src/symbol_table.o: h/symbol_table.h h/s_expression.h h/var_type.h h/token.h
+src/symbol_table.o: h/token_type.h
+src/token.o: h/token.h h/token_type.h
+src/tokenizer.o: h/tokenizer.h h/token.h h/token_type.h

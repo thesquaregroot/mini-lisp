@@ -5,8 +5,11 @@
 #include "token_type.h"
 
 struct token {
-  std::string lex_val;
-  token_type type;
+    token_type type;
+    std::string lex_val;
+
+    token();
+    token(token_type, std::string);
 };
 
 #endif
