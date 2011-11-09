@@ -6,6 +6,7 @@ using namespace std;
 // std::string buffer;
 // char look_ahead;
 // int line;
+// bool verbose
 
 
 char tokenizer::next_non_ws() {
@@ -23,9 +24,10 @@ char tokenizer::next_non_ws() {
 }
 
 // public
-tokenizer::tokenizer() {
+tokenizer::tokenizer(bool vrbs) {
     ins = &cin;
     line = 1;
+    verbose = vrbs;
 }
 
 tokenizer::tokenizer(istream* in) {
@@ -38,18 +40,20 @@ token tokenizer::get() {
     look_ahead = next_non_ws();
     if (ins->eof()) {
         t.type = F_END;
+        if (verbose) cout << "F_END\n";
         return t;
     }
-    bool one_or_more = false;
     // if digit, test against 1, else use the actual lookhead
     //   this allows for a slight optimization after the +/- cases.
     switch(isdigit(look_ahead)?'1':look_ahead) {
         case '(':
             t.type = L_PAREN;
+            if (verbose) cout << "L_PAREN\n";
             t.lex_val = '(';
             break;
         case ')':
             t.type = R_PAREN;
+            if (verbose) cout << "R_PAREN\n";
             t.lex_val = ')';
             break;
         case '.':
@@ -61,41 +65,54 @@ token tokenizer::get() {
             // save +/-
             t.lex_val += look_ahead;
         case '1':
-            // expect a number afterward
-            while (!ins->eof() && isdigit(look_ahead = ins->get())) {
+            if (isdigit(look_ahead)) {
                 t.lex_val += look_ahead;
-                one_or_more = true;
-            }
-            if ((isspace(look_ahead) || look_ahead == ')' || ins->eof()) && one_or_more) {
-                // return the extra character if not at the end of the stream
-                if (ins->eof()) ins->unget();
-                // We have an INT
-                t.type = ATOM;
+
+                while (!ins->eof() && isdigit(look_ahead = ins->get())) {
+                    t.lex_val += look_ahead;
+                }
+                if (isspace(look_ahead) || look_ahead == ')' || ins->eof()) {
+                    // return the extra character if not at the end of the stream
+                    if (!ins->eof()) ins->unget();
+                    // We have an INT
+                    if (verbose) cout << "ATOM\n";
+                    t.type = ATOM;
+                } else {
+                    // invalid character after number or +/- without digits
+                    t.lex_val += look_ahead;
+                    if (verbose) cout << "ERROR\n";
+                    t.type = ERROR;
+                }
             } else {
                 // invalid character after number or +/- without digits
                 t.lex_val += look_ahead;
+                if (verbose) cout << "ERROR\n";
                 t.type = ERROR;
             }
             break;
         default:
             if (isalpha(look_ahead)) {
                 t.lex_val += look_ahead;
+
                 while (!ins->eof() && isalnum(look_ahead = ins->get())) {
                     t.lex_val += look_ahead;
                 }
-                if ((isspace(look_ahead) || look_ahead == ')' || ins->eof()) && one_or_more) {
+                if (isspace(look_ahead) || look_ahead == ')' || ins->eof()) {
                     // return the extra character if not at the end of the stream
-                    if (ins->eof()) ins->unget();
+                    if (!ins->eof()) ins->unget();
                     // we have an identifier (function call)
+                    if (verbose) cout << "ATOM\n";
                     t.type = ATOM;
                 } else {
                     // invalid identifier
                     t.lex_val += look_ahead;
+                    if (verbose) cout << "ERROR\n";
                     t.type = ERROR;
                 }
             } else {
                 // Invalid character
                 t.lex_val += look_ahead;
+                if (verbose) cout << "ERROR\n";
                 t.type = ERROR;
             }
             break;

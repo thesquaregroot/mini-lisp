@@ -10,8 +10,11 @@ class s_expression {
     var_type type;
     std::string lex_val;
     int value;
-    s_expression* lst;
-    s_expression* rst;
+    s_expression* left;
+    s_expression* right;
+    
+    // Makes this s_expression a leaf by giving it a value.
+    void set(token);
 
   public:
     ///
@@ -47,12 +50,10 @@ class s_expression {
     // If this s_expression is not an leaf, returns a reference to the right sub-tree.
     //  If it is an leaf, returns NULL.
     //  Essentially a 'car' function.
-    s_expression* left();
+    s_expression* car();
     // Same as 'left()' but for the right sub-tree.
     //  Essentially a 'cdr' function. 
-    s_expression* right();
-    // Makes this s_expression a leaf by giving it a value.
-    void set(token);
+    s_expression* cdr();
     // Return true if and only if this s_expression is an leaf.
     bool is_leaf();
     // Returns the element of the list with the given index.
@@ -65,8 +66,8 @@ class s_expression {
     //       ((1) (2 3) (4))
     //                      all have size = 3.
     int size();
-    // Print an appropriate representation of this s_expression.
-    void print();
+    // Returns an appropriate string representation of this s_expression.
+    std::string to_string();
 };
 
 #endif

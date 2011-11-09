@@ -11,10 +11,11 @@ class interpreter {
     symbol_table symbols;
     tokenizer ins;
     token err_tkn;
+    token pass;  // for when a list ends -- should only ever hold a right-parenthesis
     std::string err_msg;
 
     // Build an s_expression out of the string of tokens
-    s_expression* get_exp(token);
+    s_expression* get_expr(token);
     // Get a 'list' within an expression.
     //   This is related to the revised grammar.
     //   See README for more details.

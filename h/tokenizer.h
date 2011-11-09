@@ -11,13 +11,14 @@ class tokenizer {
     std::string buffer;
     char look_ahead;
     int line;
+    bool verbose;
 
     // get the next non-whitespace character from the stream
     char next_non_ws();
 
   public:
     // Create a tokenizer defaulting on standard input.
-    tokenizer();
+    tokenizer(bool = false);
     // Create a tokenizer with the given input stream.
     tokenizer(std::istream*);
 

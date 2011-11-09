@@ -5,13 +5,14 @@ using namespace std;
 // symbol_table symbols;
 // tokenizer ins;
 // token err_tkn;
+// token pass;
 // std::string err_msg;
 
 /// private
-s_expression* interpreter::get_exp(token start) {
+s_expression* interpreter::get_expr(token start) {
     if (start.type != L_PAREN && start.type != ATOM) {
         err_tkn = start;
-        err_msg = "Program must start with a '(' or an atom.";
+        err_msg = "Expression must start with a '(' or an atom.";
         return NULL;
     }
     if (start.type == ATOM) {
@@ -26,13 +27,7 @@ s_expression* interpreter::get_exp(token start) {
         // Error found in other function, no need to do anything
         return NULL;
     }
-    // have list, get close paren
-    t = ins.get();
-    if (t.type != R_PAREN) {
-        err_tkn = t;
-        err_msg = "Expression didn't end with closing parenthesis.";
-        return NULL;
-    }
+    // list has found close paren
     // return the list
     return s;
 }
@@ -40,57 +35,36 @@ s_expression* interpreter::get_exp(token start) {
 s_expression* interpreter::get_list(token start) {
     if (start.type == R_PAREN) {
         // empty string case
-        s_expression* s = new s_expression(token(ATOM, "NIL"));
-        return s;
+        return new s_expression(token(ATOM, "NIL"));
     }
     if (start.type != ATOM && start.type != L_PAREN) {
         // ERROR or F_END
         err_tkn = start;
-        err_msg = "Invalid beginning of list.";
+        err_msg = "Invalid list element.";
         return NULL;
     }
-    token t = ins.get();
-    s_expression* s = get_exp(t);
+    s_expression* s = get_expr(start);
     if (s == NULL) {
         // Error found in other function, no need to do anything
         return NULL;
-    }  
-    t = ins.get();
-    s_expression* l;
+    }
+    token t = ins.get();
+    // either end or followed by another list
     switch(t.type) {
         case R_PAREN:
-            // done with this list
+            // end of list
             return s;
             break;
         case DOT:
-            // ignore dot
+            // ignore dot and continue to list
             t = ins.get();
-            if (t.type != ATOM && t.type != L_PAREN) {
-                err_tkn = t;
-                err_msg = "Non-list following '.'.";
-                return NULL;
-            }
-        case ATOM:
-        case L_PAREN:
-            // get a list
-            l = get_list(t);
-            if (l == NULL) {
-                // Error found in other function, no need to do anything
-                return NULL;
-            }
-            // combine s-expressions
-            return new s_expression(s, l);
-            break;
         default:
-            err_tkn = t;
-            err_msg = "Invalid list element.";
-            return NULL;
+            // combine s with following list
+            // error catching will happen at the beginning of the function
+            return new s_expression(s, get_list(t));
             break;
     }
-    // shouldn't get here
-    err_tkn = t;
-    err_msg = "Unknown error.";
-    return NULL;
+    return NULL; // will never get here, this just shuts up the compiler
 }
 
 /// public
@@ -99,14 +73,24 @@ interpreter::interpreter(tokenizer& tokens) {
 }
 
 bool interpreter::exec() {
-    return false;
+    token t = ins.get();
+    while (t.type != F_END) {
+        s_expression* s = get_expr(t);
+        if (s == NULL) {
+            // error
+           return false;
+        }
+        cout << s->to_string() << endl;
+        t = ins.get();
+    }
+    return true;
 }
 
 string interpreter::error() {
-    if (err_tkn.type == F_END) {
+/*    if (err_tkn.type == F_END) {
         // override error message in this case
         err_msg = "Unexpected end of file.";
     }
-    return ("ERROR: line " + itos(ins.lineno()) + ": " + err_msg);
+*/    return ("ERROR: At token `" + err_tkn.lex_val + "` on line " + itos(ins.lineno()) + ": " + err_msg);
 }
 

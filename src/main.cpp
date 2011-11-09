@@ -3,7 +3,7 @@
 using namespace std;
 
 int main() {
-    tokenizer tokens(&cin);
+    tokenizer tokens(true);
     interpreter interpret(tokens);
 
     if (!interpret.exec()) {

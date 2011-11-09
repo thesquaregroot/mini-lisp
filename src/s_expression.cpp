@@ -1,52 +1,17 @@
 
 #include <iostream>
 #include <cstdlib>
+#include "../h/itos.h"
 #include "../h/s_expression.h"
 using namespace std;
 
 // var_type type;
 // std::string lex_val;
 // int value;
-// s_expression* lst;
-// s_expression* rst;
+// s_expression* left;
+// s_expression* right;
 
-///  constructors
-s_expression::s_expression() {
-    lst = NULL;
-    rst = NULL;
-}
-
-s_expression::s_expression(token t) {
-    lst = new s_expression();
-    lst->set(t);
-    rst = NULL;
-}
-
-s_expression::s_expression(token t, s_expression* list) {
-    lst = new s_expression(t);
-    rst = list;
-}
-
-s_expression::s_expression(s_expression* l, s_expression* r) {
-    lst = l;
-    rst = r;
-}
-
-///  destructor
-s_expression::~s_expression() {
-    delete lst;
-    delete rst;
-}
-
-// methods
-s_expression* s_expression::left() {
-    return lst;
-}
-
-s_expression* s_expression::right() {
-    return rst;
-}
-
+// private
 void s_expression::set(token t) {
     lex_val = t.lex_val;
     if (t.lex_val == "T") {
@@ -64,46 +29,85 @@ void s_expression::set(token t) {
     }
 }
 
-bool s_expression::is_leaf() {
-    return (lst == NULL && rst == NULL);
+// public
+s_expression::s_expression() {
+    left = NULL;
+    right = NULL;
+}
+
+s_expression::s_expression(token t) {
+    left = new s_expression();
+    left->set(t);
+    right = NULL;
+}
+
+s_expression::s_expression(token t, s_expression* list) {
+    left = new s_expression();
+    left->set(t);
+    right = list;
+}
+
+s_expression::s_expression(s_expression* l, s_expression* r) {
+    left = l;
+    right = r;
+}
+
+///  destructor
+s_expression::~s_expression() {
+    delete left;
+    delete right;
+}
+
+// methods
+s_expression* s_expression::car() {
+    return left;
+}
+
+s_expression* s_expression::cdr() {
+    return right;
 }
 
 s_expression* s_expression::operator[](int i) {
     if (i == 0) {
-        return lst;
+        return left;
     } else {
-        return (*rst)[i-1];
+        return (*right)[i-1];
     }
 }
 
+bool s_expression::is_leaf() {
+    return (left == NULL && right == NULL);
+}
+
 int s_expression::size() {
-    if (rst == NULL) {
-        if (lst == NULL) {
+    if (right == NULL) {
+        if (left == NULL) {
             return 0;
         }
         return 1;
     } else {
-        return (1 + rst->size());
+        return (1 + right->size());
     }
 }
 
-void s_expression::print() {
-    if (lst == NULL && rst == NULL) {
+string s_expression::to_string() {
+    string str;
+    if (left == NULL && right == NULL) {
         if (type == BOOL) {
-            cout << value?"T":"NIL";
+            str = (value>0)?"T":"NIL";
         } else {
             // INT
-            cout << value;
+            str = itos(value);
         }
-        cout << value;
     } else {
-        cout << '(';
-        lst->print();
-        if (rst != NULL) {
-            cout << ' ';
-            rst->print();
+        str = '(';
+        str += left->to_string();
+        if (right != NULL) {
+            str += ' ';
+            str += right->to_string();
         }
-        cout << ')';
+        str += ')';
     }
+    return str;
 }
 
