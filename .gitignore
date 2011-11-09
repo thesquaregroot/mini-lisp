@@ -4,7 +4,7 @@ h/*.tab.h
 src/*.output
 src/lex.*.c
 src/lex.*.c
-src/*.o
+*.o
 *.txt
 !README.txt
 !test/*.txt
