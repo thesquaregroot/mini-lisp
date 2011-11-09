@@ -87,6 +87,10 @@ s_expression* interpreter::get_list(token start) {
             return NULL;
             break;
     }
+    // shouldn't get here
+    err_tkn = t;
+    err_msg = "Unknown error.";
+    return NULL;
 }
 
 /// public

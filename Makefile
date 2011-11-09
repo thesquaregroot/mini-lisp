@@ -28,6 +28,7 @@ $(EXE) : $(OBJS) # depends on all object files
 # An object file is dependent on the corresponding source file
 
 o/%.o : src/%.cpp
+	mkdir -p o
 	$(COMPILE) -o $@ $<
 
 clean:
