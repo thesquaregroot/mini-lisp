@@ -8,5 +8,5 @@ o/*.o
 *.txt
 !README.txt
 !test/*.txt
-./lisp
+lisp
 *~
