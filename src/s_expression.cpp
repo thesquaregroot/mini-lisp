@@ -36,9 +36,7 @@ s_expression::s_expression() {
 }
 
 s_expression::s_expression(token t) {
-    left = new s_expression();
-    left->set(t);
-    right = NULL;
+    this->set(t);
 }
 
 s_expression::s_expression(token t, s_expression* list) {
@@ -92,7 +90,7 @@ int s_expression::size() {
 
 string s_expression::to_string() {
     string str;
-    if (left == NULL && right == NULL) {
+    if (left == NULL) {
         if (type == BOOL) {
             str = (value>0)?"T":"NIL";
         } else {

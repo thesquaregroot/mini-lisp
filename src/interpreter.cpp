@@ -10,9 +10,14 @@ using namespace std;
 
 /// private
 s_expression* interpreter::get_expr(token start) {
+    if (start.type == ERROR) {
+        err_tkn = start;
+        err_msg = "Unrecognized token.";
+        return NULL;
+    }
     if (start.type != L_PAREN && start.type != ATOM) {
         err_tkn = start;
-        err_msg = "Expression must start with a '(' or an atom.";
+        err_msg = "Invalid list element.";
         return NULL;
     }
     if (start.type == ATOM) {
@@ -21,8 +26,7 @@ s_expression* interpreter::get_expr(token start) {
         return s;
     }
     // open paren, handle list
-    token t = ins.get();
-    s_expression* s = get_list(t);
+    s_expression* s = get_list(ins.get());
     if (s == NULL) {
         // Error found in other function, no need to do anything
         return NULL;
@@ -33,15 +37,14 @@ s_expression* interpreter::get_expr(token start) {
 }
 
 s_expression* interpreter::get_list(token start) {
+    if (start.type == ERROR) {
+        err_tkn = start;
+        err_msg = "Unrecognized token.";
+        return NULL;
+    }
     if (start.type == R_PAREN) {
         // empty string case
         return new s_expression(token(ATOM, "NIL"));
-    }
-    if (start.type != ATOM && start.type != L_PAREN) {
-        // ERROR or F_END
-        err_tkn = start;
-        err_msg = "Invalid list element.";
-        return NULL;
     }
     s_expression* s = get_expr(start);
     if (s == NULL) {
@@ -49,8 +52,14 @@ s_expression* interpreter::get_list(token start) {
         return NULL;
     }
     token t = ins.get();
+    s_expression* l;
     // either end or followed by another list
     switch(t.type) {
+        case ERROR:
+            err_tkn = start;
+            err_msg = "Unrecognized token.";
+            return NULL;
+            break;
         case R_PAREN:
             // end of list
             return s;
@@ -61,7 +70,12 @@ s_expression* interpreter::get_list(token start) {
         default:
             // combine s with following list
             // error catching will happen at the beginning of the function
-            return new s_expression(s, get_list(t));
+            l = get_list(t);
+            if (l == NULL) {
+                // Error found in other function, no need to do anything
+                return NULL;
+            }
+            return new s_expression(s, l);
             break;
     }
     return NULL; // will never get here, this just shuts up the compiler

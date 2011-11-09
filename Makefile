@@ -42,7 +42,8 @@ src/interpreter.o: h/var_type.h h/token.h h/token_type.h h/tokenizer.h
 src/itos.o: h/itos.h
 src/main.o: h/interpreter.h h/symbol_table.h h/s_expression.h h/var_type.h
 src/main.o: h/token.h h/token_type.h h/tokenizer.h
-src/s_expression.o: h/s_expression.h h/var_type.h h/token.h h/token_type.h
+src/s_expression.o: h/itos.h h/s_expression.h h/var_type.h h/token.h
+src/s_expression.o: h/token_type.h
 src/symbol_table.o: h/symbol_table.h h/s_expression.h h/var_type.h h/token.h
 src/symbol_table.o: h/token_type.h
 src/token.o: h/token.h h/token_type.h

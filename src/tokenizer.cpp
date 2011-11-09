@@ -59,6 +59,12 @@ token tokenizer::get() {
         case '.':
             t.type = DOT;
             t.lex_val = '.';
+            if (!isspace(look_ahead = ins->get())) {
+                t.lex_val += look_ahead;
+                if (verbose) cout << "ERROR\n";
+                t.type = ERROR;
+                // don't worry about putting it back since it's just whitespace
+            }
             break;
         case '-':
         case '+':
