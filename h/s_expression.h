@@ -25,7 +25,7 @@ class s_expression {
     //       .
     //      / \
     //   token NIL
-    //                  */
+    */
     s_expression(token);
     /***
     // create an s_expression with the following structure:
@@ -34,7 +34,7 @@ class s_expression {
     //  token  .
     //        / \
     //    s_exp NIL
-    //                  */
+    */
     s_expression(token, s_expression*);
     /***
     //  create an s_expression with the following structure:
@@ -43,7 +43,7 @@ class s_expression {
     //   s_exp .
     //        / \
     //     s_exp NIL
-    //                 */
+    */
     s_expression(s_expression*, s_expression*);
     ~s_expression();
 
@@ -54,6 +54,14 @@ class s_expression {
     // Same as 'left()' but for the right sub-tree.
     //  Essentially a 'cdr' function. 
     s_expression* cdr();
+    /***
+    //  combine two s_expressions and returns a pointer to itself
+    //
+    //     .  <- this
+    //    / \
+    //   .  s_exp
+    */
+    s_expression* append_right(s_expression*);
     // Return true if and only if this s_expression is an leaf.
     bool is_leaf();
     // Returns the element of the list with the given index.

@@ -5,16 +5,10 @@ using namespace std;
 // symbol_table symbols;
 // tokenizer ins;
 // token err_tkn;
-// token pass;
 // std::string err_msg;
 
 /// private
 s_expression* interpreter::get_expr(token start) {
-    if (start.type == ERROR) {
-        err_tkn = start;
-        err_msg = "Unrecognized token.";
-        return NULL;
-    }
     if (start.type != L_PAREN && start.type != ATOM) {
         err_tkn = start;
         err_msg = "Invalid list element.";
@@ -37,11 +31,6 @@ s_expression* interpreter::get_expr(token start) {
 }
 
 s_expression* interpreter::get_list(token start) {
-    if (start.type == ERROR) {
-        err_tkn = start;
-        err_msg = "Unrecognized token.";
-        return NULL;
-    }
     if (start.type == R_PAREN) {
         // empty string case
         return new s_expression(token(ATOM, "NIL"));
@@ -75,7 +64,7 @@ s_expression* interpreter::get_list(token start) {
                 // Error found in other function, no need to do anything
                 return NULL;
             }
-            return new s_expression(s, l);
+            return s->append_right(l);
             break;
     }
     return NULL; // will never get here, this just shuts up the compiler
@@ -101,10 +90,10 @@ bool interpreter::exec() {
 }
 
 string interpreter::error() {
-/*    if (err_tkn.type == F_END) {
+    if (err_tkn.type == F_END) {
         // override error message in this case
         err_msg = "Unexpected end of file.";
     }
-*/    return ("ERROR: At token `" + err_tkn.lex_val + "` on line " + itos(ins.lineno()) + ": " + err_msg);
+    return ("ERROR: At token `" + err_tkn.lex_val + "` on line " + itos(ins.lineno()) + ": " + err_msg);
 }
 

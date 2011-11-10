@@ -35,19 +35,43 @@ s_expression::s_expression() {
     right = NULL;
 }
 
+/***
+// create an s_expression with the following structure:
+//       .
+//      / \
+//   token NIL
+*/
 s_expression::s_expression(token t) {
     this->set(t);
 }
 
+/***
+// create an s_expression with the following structure:
+//       .
+//      / \
+//  token  .
+//        / \
+//    s_exp NIL
+*/
 s_expression::s_expression(token t, s_expression* list) {
     left = new s_expression();
     left->set(t);
-    right = list;
+    right = new s_expression();
+    right->left = list;
 }
 
+/***
+//  create an s_expression with the following structure:
+//       .
+//      / \
+//   s_exp .
+//        / \
+//     s_exp NIL
+*/
 s_expression::s_expression(s_expression* l, s_expression* r) {
     left = l;
-    right = r;
+    right = new s_expression();
+    right->left = r;    
 }
 
 ///  destructor
@@ -63,6 +87,30 @@ s_expression* s_expression::car() {
 
 s_expression* s_expression::cdr() {
     return right;
+}
+
+/***
+//  Combines two s_expressions and returns a pointer to itself
+//
+//     .  <- this
+//    / \
+//   .  s_exp
+*/
+s_expression* s_expression::append_right(s_expression* r) {
+    if (left == NULL) {
+        left = new s_expression();
+        // copy data over
+        left->type = type;
+        left->lex_val = lex_val;
+        left->value = value;
+    }
+
+    s_expression* s = this;
+    while (s->right != NULL) {
+        s = s->right;
+    }
+    s->right = r;
+    return this;
 }
 
 s_expression* s_expression::operator[](int i) {
@@ -100,9 +148,15 @@ string s_expression::to_string() {
     } else {
         str = '(';
         str += left->to_string();
-        if (right != NULL) {
-            str += ' ';
-            str += right->to_string();
+        if (right != NULL && right->left != NULL && right->left->lex_val != "NIL") {
+            str += " . ";
+            /*     .
+            //    / \
+            //   .   . <- right
+            //      /
+            //    (.)  <- going here (right->left) */
+            
+            str += right->left->to_string();
         }
         str += ')';
     }
