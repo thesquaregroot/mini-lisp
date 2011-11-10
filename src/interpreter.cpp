@@ -64,7 +64,7 @@ s_expression* interpreter::get_list(token start) {
                 // Error found in other function, no need to do anything
                 return NULL;
             }
-            return s->append_right(l);
+            return new s_expression(s, l);
             break;
     }
     return NULL; // will never get here, this just shuts up the compiler
@@ -83,7 +83,7 @@ bool interpreter::exec() {
             // error
            return false;
         }
-        cout << s->to_string() << endl;
+        cout << s->to_string() << " size: " << s->size() << endl;
         t = ins.get();
     }
     return true;

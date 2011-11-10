@@ -38,11 +38,9 @@ class s_expression {
     s_expression(token, s_expression*);
     /***
     //  create an s_expression with the following structure:
-    //       .
-    //      / \
-    //   s_exp .
-    //        / \
-    //     s_exp NIL
+    //      s_exp
+    //         \
+    //        s_exp
     */
     s_expression(s_expression*, s_expression*);
     ~s_expression();
@@ -61,8 +59,6 @@ class s_expression {
     //    / \
     //   .  s_exp
     */
-    s_expression* append_right(s_expression*);
-    // Return true if and only if this s_expression is an leaf.
     bool is_leaf();
     // Returns the element of the list with the given index.
     //   Requires that the s_expression is a list.
