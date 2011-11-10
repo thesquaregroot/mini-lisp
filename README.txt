@@ -51,10 +51,10 @@ interpreter to generate s_expression objects:
     <expr>  ::= ( <list> )
               | atom
 
-    <list>  ::= <expr>
+    <list>  ::= ε
+              | <expr>
+              | <expr> . <expr>
               | <expr> <list>
-              | <expr> . <list>
-              | ε
 
     This grammar can be seen as a simplification of the grammar in the project description as it
 contains fewer non-terminal symbols.  Furthermore, the structure of an s-expression, with element

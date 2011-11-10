@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "symbol_table.h"
+#include "s_expression.h"
 #include "tokenizer.h"
 
 class interpreter {

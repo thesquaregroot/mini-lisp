@@ -37,6 +37,12 @@ clean:
 
 # DO NOT DELETE
 
+h/interpreter.o: h/symbol_table.h h/s_expression.h h/var_type.h h/token.h
+h/interpreter.o: h/token_type.h h/tokenizer.h
+h/s_expression.o: h/var_type.h h/token.h h/token_type.h
+h/symbol_table.o: h/s_expression.h h/var_type.h h/token.h h/token_type.h
+h/token.o: h/token_type.h
+h/tokenizer.o: h/token.h h/token_type.h
 src/interpreter.o: h/itos.h h/interpreter.h h/symbol_table.h h/s_expression.h
 src/interpreter.o: h/var_type.h h/token.h h/token_type.h h/tokenizer.h
 src/itos.o: h/itos.h

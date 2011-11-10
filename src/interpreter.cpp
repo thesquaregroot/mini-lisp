@@ -41,7 +41,7 @@ s_expression* interpreter::get_list(token start) {
         return NULL;
     }
     token t = ins.get();
-    s_expression* l;
+    s_expression* r;
     // either end or followed by another list
     switch(t.type) {
         case ERROR:
@@ -54,17 +54,24 @@ s_expression* interpreter::get_list(token start) {
             return s;
             break;
         case DOT:
-            // ignore dot and continue to list
+            // ignore dot and get accompanying expression
             t = ins.get();
-        default:
-            // combine s with following list
-            // error catching will happen at the beginning of the function
-            l = get_list(t);
-            if (l == NULL) {
+            r = get_expr(t);
+            if (r == NULL) {
                 // Error found in other function, no need to do anything
                 return NULL;
             }
-            return new s_expression(s, l);
+            return new s_expression(s, r);
+            break;
+        default:
+            // combine s with following list
+            // error catching will happen at the beginning of the function
+            r = get_list(t);
+            if (r == NULL) {
+                // Error found in other function, no need to do anything
+                return NULL;
+            }
+            return s->append_right(r);
             break;
     }
     return NULL; // will never get here, this just shuts up the compiler

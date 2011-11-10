@@ -35,79 +35,27 @@ s_expression::s_expression() {
     right = NULL;
 }
 
-// Create an s_expression leaf with the value of the token
+// create a leaf node
 s_expression::s_expression(token t) {
-    this->set(t);
     left = NULL;
     right = NULL;
+    this->set(t);
 }
 
 /***
-// Create an s_expression with the following structure:
-//       .
-//      / \
-//  token list
-*/
-s_expression::s_expression(token t, s_expression* list) {
-    left = new s_expression();
-    left->set(t);
-    right = list;
-}
-
-/***
-// Append a list to another to form the following structure:
+// Create a list from two s_expressions in the following structure:
 //
-//     l          .        l         .
-//      \   or   / \   or   \  or   / \
-//       r      l   r        .     l   .
-//                          /         /
-//                         r         r
+//    .
+//   / \
+//  l   .
+//     /
+//    r
 */
 s_expression::s_expression(s_expression* l, s_expression* r) {
-    // Create left side
-    if (l->left == NULL) {
-        // single element, make list element
-        left = new s_expression();
-        // copy data
-        left->type = l->type;
-        left->value = l->value;
-        left->lex_val = l->lex_val;
-
-    } else {
-        // list, use same first element
-        left = l->left;
-    }
-    // copy the rest of l (either NULL or the rest of a list)
-    right = l->right;
-
-    // find the end of the list
-    if (right == NULL) {
-        // make r the last element(s)
-        if (r->left == NULL) {
-            // single element
-            right = new s_expression();
-            right->left = r;
-
-        } else {
-            // list
-            right = r;
-        }
-    } else {
-        s_expression* s = right;
-        while (s->right != NULL) {
-            s = s->right;
-        }
-        // make r the last element(s)
-        if (r->left == NULL) {
-            // single element
-            s->right = new s_expression();
-            s->right->left = r;
-
-        } else {
-            // list
-            s->right = r;
-        }
-    }
+    left = l;
+    // single element
+    right = new s_expression();
+    right->left = r;
 }
 
 ///  destructor
@@ -117,12 +65,28 @@ s_expression::~s_expression() {
 }
 
 // methods
-s_expression* s_expression::car() {
+s_expression*& s_expression::car() {
     return left;
 }
 
-s_expression* s_expression::cdr() {
+s_expression*& s_expression::cdr() {
     return right;
+}
+
+/***
+// Create the following structure:
+//
+//  this
+//    \
+//     r
+*/
+s_expression* s_expression::append_right(s_expression* r) {
+    s_expression* s = this;
+    while (s->right != NULL) {
+        s = s->right;
+    }
+    s->right = r;
+    return this;
 }
 
 s_expression* s_expression::operator[](int i) {

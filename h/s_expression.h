@@ -20,27 +20,15 @@ class s_expression {
     ///
     // Create an empty s_expression.
     s_expression();
-    /***
-    // create an s_expression with the following structure:
-    //       .
-    //      / \
-    //   token NIL
-    */
+    // create a leaf node
     s_expression(token);
     /***
-    // create an s_expression with the following structure:
-    //       .
-    //      / \
-    //  token  .
-    //        / \
-    //    s_exp NIL
-    */
-    s_expression(token, s_expression*);
-    /***
     //  create an s_expression with the following structure:
-    //      s_exp
-    //         \
-    //        s_exp
+    //      .
+    //     / \
+    //  s_exp .
+    //       /
+    //     s_exp
     */
     s_expression(s_expression*, s_expression*);
     ~s_expression();
@@ -48,17 +36,19 @@ class s_expression {
     // If this s_expression is not an leaf, returns a reference to the right sub-tree.
     //  If it is an leaf, returns NULL.
     //  Essentially a 'car' function.
-    s_expression* car();
+    s_expression*& car();
     // Same as 'left()' but for the right sub-tree.
     //  Essentially a 'cdr' function. 
-    s_expression* cdr();
+    s_expression*& cdr();
     /***
-    //  combine two s_expressions and returns a pointer to itself
+    // Create the following structure:
     //
-    //     .  <- this
-    //    / \
-    //   .  s_exp
+    //  this
+    //    \
+    //   s_exp
     */
+    s_expression* append_right(s_expression*);
+    // returns true iff the tree is a node
     bool is_leaf();
     // Returns the element of the list with the given index.
     //   Requires that the s_expression is a list.
