@@ -11,7 +11,7 @@ using namespace std;
 
 char tokenizer::next_non_ws() {
     char tmp;
-    while (!ins->eof() && isspace(tmp = ins->get())) {
+    while (!ins->eof() && isspace(tmp = toupper(ins->get()))) {
         if (tmp == '\n') {
             ++line;
         }
@@ -21,6 +21,10 @@ char tokenizer::next_non_ws() {
     } else {
         return tmp;
     }
+}
+
+char tokenizer::next() {
+    return toupper(ins->get());
 }
 
 // public
@@ -59,7 +63,7 @@ token tokenizer::get() {
         case '.':
             t.type = DOT;
             t.lex_val = '.';
-            if (!isspace(look_ahead = ins->get())) {
+            if (!isspace(look_ahead = next())) {
                 t.lex_val += look_ahead;
                 if (verbose) cout << "ERROR\n";
                 t.type = ERROR;
@@ -74,7 +78,7 @@ token tokenizer::get() {
             if (isdigit(look_ahead)) {
                 t.lex_val += look_ahead;
 
-                while (!ins->eof() && isdigit(look_ahead = ins->get())) {
+                while (!ins->eof() && isdigit(look_ahead = next())) {
                     t.lex_val += look_ahead;
                 }
                 if (isspace(look_ahead) || look_ahead == ')' || ins->eof()) {
@@ -100,7 +104,7 @@ token tokenizer::get() {
             if (isalpha(look_ahead)) {
                 t.lex_val += look_ahead;
 
-                while (!ins->eof() && isalnum(look_ahead = ins->get())) {
+                while (!ins->eof() && isalnum(look_ahead = next())) {
                     t.lex_val += look_ahead;
                 }
                 if (isspace(look_ahead) || look_ahead == ')' || ins->eof()) {

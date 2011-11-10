@@ -13,8 +13,11 @@ class tokenizer {
     int line;
     bool verbose;
 
+    // -- both of the followiing functions convert all lower case letters to upper case.
     // get the next non-whitespace character from the stream
     char next_non_ws();
+    // get the next character from the stream
+    char next();
 
   public:
     // Create a tokenizer defaulting on standard input.
