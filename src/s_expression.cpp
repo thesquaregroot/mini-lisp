@@ -164,7 +164,7 @@ string s_expression::to_string() {
     } else {
         str = '(';
         str += left->to_string();
-        if (right != NULL && right->left != NULL) {
+        if (right != NULL) {
             str += " . ";
             /*     .
             //    / \
@@ -172,7 +172,7 @@ string s_expression::to_string() {
             //      /
             //    (.)  <- going here (right->left)
             */
-            str += right->left->to_string();
+            str += right->to_string();
         }
         str += ')';
     }
