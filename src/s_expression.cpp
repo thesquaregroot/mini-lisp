@@ -35,18 +35,15 @@ s_expression::s_expression() {
     right = NULL;
 }
 
-/***
-// create an s_expression with the following structure:
-//       .
-//      / \
-//   token NIL
-*/
+// Create an s_expression leaf with the value of the token
 s_expression::s_expression(token t) {
     this->set(t);
+    left = NULL;
+    right = NULL;
 }
 
 /***
-// create an s_expression with the following structure:
+// Create an s_expression with the following structure:
 //       .
 //      / \
 //  token list
@@ -58,12 +55,13 @@ s_expression::s_expression(token t, s_expression* list) {
 }
 
 /***
-//  Append a list to another to form the following structure:
-//       l           .        l        .
-//        \    or   / \   or   \  or  / \
-//         r       l   r        .    l   .
-//                             /        /
-//                            r        r
+// Append a list to another to form the following structure:
+//
+//     l          .        l         .
+//      \   or   / \   or   \  or   / \
+//       r      l   r        .     l   .
+//                          /         /
+//                         r         r
 */
 s_expression::s_expression(s_expression* l, s_expression* r) {
     // Create left side
