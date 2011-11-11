@@ -12,7 +12,7 @@ using namespace std;
 s_expression* interpreter::eval(s_expression* s) {
     s_expression *r = NULL;
 
-    if (s->is_leaf() && type != IDENT) {
+    if (s->is_leaf() && s->type() != IDENT) {
         // echo numbers and booleans
         return s;
 
@@ -176,6 +176,10 @@ interpreter::interpreter(tokenizer& tokens) {
     err_tkn = NULL;
 }
 
+interpreter::~interpreter() {
+    delete err_tkn;
+}
+
 bool interpreter::exec() {
     token t = ins.get();
     while (t.type != F_END) {
@@ -191,7 +195,7 @@ bool interpreter::exec() {
             return false;
         }
         // print result
-        s->to_string();
+        cout << s->to_string() << endl;
 
         // get beginning of next expression (or EOF).
         t = ins.get();
@@ -200,7 +204,7 @@ bool interpreter::exec() {
 }
 
 string interpreter::error() {
-    if (err_tkn.type == F_END) {
+    if (err_tkn != NULL && err_tkn->type == F_END) {
         // override error message in this case
         err_msg = "Unexpected end of file.";
     }

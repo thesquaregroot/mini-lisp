@@ -26,6 +26,9 @@ class interpreter {
   public:
     // construct with a tokenizer
     interpreter(tokenizer&);
+    // Properly dispose of stack memory
+    ~interpreter();
+
     // interpret the code
     bool exec();
     // build an error string
