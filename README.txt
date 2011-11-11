@@ -46,18 +46,19 @@ Grammar Used
 all syntactically valid s-expressions (but not necessarily semantically valid) and is used by this
 interpreter to generate s_expression objects:
 
-    <start> ::= <expr>
+    <start>  ::= <expr>
 
-    <expr>  ::= ( <list> )
-              | atom
+    <expr>   ::= atom
+               | ( )
+               | ( <expr> )
+               | ( <expr> <list> )
+               | ( <expr> . <expr> )
 
-    <list>  ::= ε
-              | <expr>
-              | <expr> . <expr>
-              | <expr> <list>
+    <list>   ::= <expr>
+               | <expr> <list>
 
     This grammar can be seen as a simplification of the grammar in the project description as it
-contains fewer non-terminal symbols.  Furthermore, the structure of an s-expression, with element
-concatenated either by spaces or explicit periods, can be seen a bit more clearly in its rules.
-
+contains fewer non-terminal symbols.  Furthermore, the structure of an s-expression, with elements
+concatenated either in series by spaces or two at a time with a period, can be seen a bit more
+clearly in its rules.
 

@@ -4,7 +4,7 @@
 enum var_type {
     INT,
     BOOL,
-    CALL
+    IDENT
 };
 
 #endif

@@ -11,9 +11,11 @@ class interpreter {
   private:
     symbol_table symbols;
     tokenizer ins;
-    token err_tkn;
+    token* err_tkn;
     std::string err_msg;
 
+    // Evalutate an s_expression
+    s_expression* eval(s_expression*);
     // Build an s_expression out of the string of tokens
     s_expression* get_expr(token);
     // Get a 'list' within an expression.

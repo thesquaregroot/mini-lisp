@@ -7,14 +7,20 @@
 
 class s_expression {
   private:
-    var_type type;
+    var_type v_type;
     std::string lex_val;
-    int value;
+    int val;
     s_expression* left;
     s_expression* right;
     
     // Makes this s_expression a leaf by giving it a value.
     void set(token);
+    // Does the work for operator[].
+    s_expression* access(int);
+    // Does the work for is_list.
+    bool list();
+    // Does the work for size.
+    int length();
 
   public:
     ///
@@ -33,27 +39,24 @@ class s_expression {
     s_expression(s_expression*, s_expression*);
     ~s_expression();
 
-    // If this s_expression is not an leaf, returns a reference to the right sub-tree.
-    //  If it is an leaf, returns NULL.
-    //  Essentially a 'car' function.
+    // Returns a pointer reference to the left sub-tree. 
     s_expression*& car();
-    // Same as 'left()' but for the right sub-tree.
-    //  Essentially a 'cdr' function. 
+    // Returns a pointer reference to the right sub-tree. 
     s_expression*& cdr();
-    /***
-    // Create the following structure:
-    //
-    //  this
-    //    \
-    //   s_exp
-    */
-    s_expression* append_right(s_expression*);
-    // returns true iff the tree is a node
+    // returns true iff the tree is a list.
+    bool is_list();
+    // returns true iff the tree is a node.
     bool is_leaf();
+    // returns true iff the tree is a leaf and has value 'NIL'.
+    bool is_nil();
+    // returns the type of a leaf node
+    var_type type();
+    // returns the value of a leaf node
+    int value();
     // Returns the element of the list with the given index.
     //   Requires that the s_expression is a list.
     s_expression* operator[](int);
-    // Returns the number of element of the list
+    // Returns the number of element of the list (requires a list).
     //   i.e.:
     //       (1 2 3)
     //       (1 2 (3 4))

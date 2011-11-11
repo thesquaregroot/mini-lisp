@@ -5,9 +5,9 @@
 #include "../h/s_expression.h"
 using namespace std;
 
-// var_type type;
+// var_type v_type;
 // std::string lex_val;
-// int value;
+// int val;
 // s_expression* left;
 // s_expression* right;
 
@@ -15,19 +15,59 @@ using namespace std;
 void s_expression::set(token t) {
     lex_val = t.lex_val;
     if (t.lex_val == "T") {
-        type = BOOL;
-        value = 1;
+        v_type = BOOL;
+        val = 1;
     } else if (t.lex_val == "NIL") {
-        type = BOOL;
-        value = 0;
+        v_type = BOOL;
+        val = 0;
     } else if (t.lex_val == "0" || atoi(t.lex_val.c_str()) != 0) {
-        type = INT;
-        value = atoi(t.lex_val.c_str());
+        v_type = INT;
+        val = atoi(t.lex_val.c_str());
     } else {
-        type = CALL;
+        v_type = IDENT;
         lex_val = t.lex_val;
     }
 }
+
+s_expression* s_expression::access(int i) {
+    if (i == 0) {
+        return left;
+    } else {
+        return (*right)[i-1];
+    }
+}
+
+bool s_expression::list() {
+    if (left != NULL && (right == NULL || (right->v_type == BOOL && right->val == 0))) {
+        /* has this structure:
+        //    . <- this
+        //   / \
+        //  .  NIL
+        */
+        return true;
+    } else {
+        /* has this structure:
+        //    . <- this
+        //   / \  
+        //  .   .
+        //     / \  
+        //    .   NIL
+        */
+        return (right != NULL && right->list());
+    }
+}
+
+int s_expression::length() {
+    if (right == NULL) {
+        if (left == NULL) {
+            return 0;
+        }
+        return 1;
+    } else {
+        return (1 + right->size());
+    }
+}
+
 
 // public
 s_expression::s_expression() {
@@ -73,72 +113,69 @@ s_expression*& s_expression::cdr() {
     return right;
 }
 
-/***
-// Create the following structure:
-//
-//  this
-//    \
-//     r
-*/
-s_expression* s_expression::append_right(s_expression* r) {
-    s_expression* s = this;
-    while (s->right != NULL) {
-        s = s->right;
-    }
-    s->right = r;
-    return this;
+// returns true iff the tree is a leaf and has value 'NIL'
+bool s_expression::is_nil() {
+    return (v_type == BOOL && val == 0);
+}
+
+// returns the type of a leaf node
+var_type s_expression::type() {
+    return v_type;
+}
+
+// returns the value of a leaf node
+int s_expression::value() {
+    return val;
 }
 
 s_expression* s_expression::operator[](int i) {
-    if (i == 0) {
-        return left;
-    } else {
-        return (*right)[i-1];
-    }
+    return this->access(i);
 }
 
 bool s_expression::is_leaf() {
     return (left == NULL);
 }
 
+bool s_expression::is_list() {
+    return this->list();
+}
+
 int s_expression::size() {
-    if (right == NULL) {
-        if (left == NULL) {
-            return 0;
-        }
-        return 1;
-    } else {
-        return (1 + right->size());
-    }
+    return this->length();
 }
 
 string s_expression::to_string() {
     string str;
     if (left == NULL) {
-        if (type == BOOL) {
-            str = (value>0)?"T":"NIL";
+        if (v_type == BOOL) {
+            str = (val>0)?"T":"NIL";
         } else {
             // INT
             if (lex_val != "") {
                 str = lex_val;
             } else {
-                str = itos(value);
+                str = itos(val);
             }
         }
     } else {
-        str = '(';
-        str += left->to_string();
-        if (right != NULL) {
-            str += " . ";
-            /*     .
-            //    / \
-            //   .   . <- right
-            //      /
-            //    (.)  <- going here (right->left)
-            */
-            str += right->to_string();
+        if (this->list()) {
+            str = '(';
+            for (int i=0; i<this->length(); i++) {
+                str += (*this)[i]->to_string();
+                if (i+1 != this->length()) {
+                    str += ' ';
+                }
+            }
+            str += ')';
+        } else { 
+            str = '(';
+            str += left->to_string();
+            if (right != NULL && right->lex_val != "NIL") {
+                str += " . ";
+                str += right->to_string();
+            }
+            str += ')';
         }
-        str += ')';
     }
     return str;
 }
