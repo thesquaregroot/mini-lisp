@@ -29,7 +29,7 @@ void s_expression::set(token t) {
     }
 }
 
-s_expression* s_expression::access(int i) {
+s_expression* s_expression::access(int i) const {
     if (i == 0) {
         return left;
     } else {
@@ -37,7 +37,7 @@ s_expression* s_expression::access(int i) {
     }
 }
 
-bool s_expression::list() {
+bool s_expression::list() const {
     if (left != NULL && (right == NULL || (right->v_type == BOOL && right->val == 0))) {
         /* has this structure:
         //    . <- this
@@ -57,14 +57,14 @@ bool s_expression::list() {
     }
 }
 
-int s_expression::length() {
+int s_expression::length() const {
     if (right == NULL) {
         if (left == NULL) {
             return 0;
         }
         return 1;
     } else {
-        return (1 + right->size());
+        return (1 + right->length());
     }
 }
 
@@ -114,17 +114,17 @@ s_expression*& s_expression::cdr() {
 }
 
 // returns true iff the tree is a leaf and has value 'NIL'
-bool s_expression::is_nil() {
+bool s_expression::is_null() const {
     return (v_type == BOOL && val == 0);
 }
 
 // returns the type of a leaf node
-var_type s_expression::type() {
+var_type s_expression::type() const {
     return v_type;
 }
 
 // returns the value of a leaf node
-int s_expression::value() {
+int s_expression::value() const {
     return val;
 }
 
@@ -132,19 +132,19 @@ s_expression* s_expression::operator[](int i) {
     return this->access(i);
 }
 
-bool s_expression::is_leaf() {
+bool s_expression::is_leaf() const {
     return (left == NULL);
 }
 
-bool s_expression::is_list() {
+bool s_expression::is_list() const {
     return this->list();
 }
 
-int s_expression::size() {
+int s_expression::size() const {
     return this->length();
 }
 
-string s_expression::to_string() {
+string s_expression::to_string() const {
     string str;
     if (left == NULL) {
         if (v_type == BOOL) {
@@ -161,7 +161,7 @@ string s_expression::to_string() {
         if (this->list()) {
             str = '(';
             for (int i=0; i<this->length(); i++) {
-                str += (*this)[i]->to_string();
+                str += this->access(i)->to_string();
                 if (i+1 != this->length()) {
                     str += ' ';
                 }
@@ -178,5 +178,16 @@ string s_expression::to_string() {
         }
     }
     return str;
+}
+
+// Returns true iff both s-expressions are leafs and have equal types and values.
+bool s_expression::operator==(const s_expression s) const {
+    if (v_type == s.v_type) {
+        if (v_type == IDENT) {
+            return (lex_val == s.lex_val);
+        }
+        return (val == s.val);
+    }
+    return false;
 }
 

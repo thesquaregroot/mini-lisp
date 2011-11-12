@@ -16,11 +16,11 @@ class s_expression {
     // Makes this s_expression a leaf by giving it a value.
     void set(token);
     // Does the work for operator[].
-    s_expression* access(int);
+    s_expression* access(int) const;
     // Does the work for is_list.
-    bool list();
+    bool list() const;
     // Does the work for size.
-    int length();
+    int length() const;
 
   public:
     ///
@@ -44,15 +44,15 @@ class s_expression {
     // Returns a pointer reference to the right sub-tree. 
     s_expression*& cdr();
     // returns true iff the tree is a list.
-    bool is_list();
+    bool is_list() const;
     // returns true iff the tree is a node.
-    bool is_leaf();
+    bool is_leaf() const;
     // returns true iff the tree is a leaf and has value 'NIL'.
-    bool is_nil();
+    bool is_null() const;
     // returns the type of a leaf node
-    var_type type();
+    var_type type() const;
     // returns the value of a leaf node
-    int value();
+    int value() const;
     // Returns the element of the list with the given index.
     //   Requires that the s_expression is a list.
     s_expression* operator[](int);
@@ -62,9 +62,11 @@ class s_expression {
     //       (1 2 (3 4))
     //       ((1) (2 3) (4))
     //                      all have size = 3.
-    int size();
+    int size() const;
     // Returns an appropriate string representation of this s_expression.
-    std::string to_string();
+    std::string to_string() const;
+    // Returns true iff both s-expressions are leafs and have equal types and values.
+    bool operator==(const s_expression) const;
 };
 
 #endif

@@ -32,7 +32,7 @@ void symbol_table::define(string& name, s_expression* args, s_expression* body) 
     s_expression* s = new s_expression();
     s->car() = args;
     s->cdr() = body;
-    funcs[def] = s;
+    funcs[def] = s;  // overwrites previous definitions if they exists
 }
 
 /* Returns the arguments and boyd of a function with the given name and number of arguments
@@ -43,6 +43,10 @@ void symbol_table::define(string& name, s_expression* args, s_expression* body) 
 */
 s_expression* symbol_table::retrieve(string& name, int arg_count) {
     definition def = definition(name, arg_count);
-    return funcs[def];
+    if (funcs.count(def) > 0) {
+        return funcs[def];
+    } else {
+        return NULL; // not defined
+    }
 }
 
