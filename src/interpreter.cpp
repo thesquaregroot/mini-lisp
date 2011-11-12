@@ -348,6 +348,10 @@ s_expression* interpreter::eval(s_expression* s) {
                     if (r->to_string() == "T") {
                         // expression becomes the second element of this list
                         r = eval(c->cdr()->car());
+                        if (r == NULL) {
+                            // error
+                            return NULL;
+                        }
                         break;  // exit
                     }
                     // else, go to next argument
@@ -423,6 +427,10 @@ s_expression* interpreter::eval(s_expression* s) {
                 s_expression **arg = new s_expression*[args->size()];
                 for (int i=0; i<args->size(); i++) {
                     arg[i] = eval((*s)[i+1]);
+                    if (arg[i] == NULL) {
+                        // error
+                        return NULL;
+                    }
                 }
                 for (int i=0; i<args->size(); i++) {
                     string arg_name = (*args)[i]->to_string();
@@ -430,6 +438,10 @@ s_expression* interpreter::eval(s_expression* s) {
                 }
                 // evaluate and return to previous scope
                 r = eval(body);
+                if (r == NULL) {
+                    // error
+                    return NULL;
+                }
                 symbols.pop();
  
             }

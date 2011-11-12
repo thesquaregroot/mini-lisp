@@ -13,9 +13,9 @@ Building and Running
 Design Description
 ------------------
     This intepreter uses an object-oriented recursive descent structure.  The 'interpereter' class
-receives a 'tokenizer' in its constructor and uses that to build 's_expression' objects.  The 
+receives a 'tokenizer' in its constructor which it uses that to build 's_expression' objects.  The 
 s_expression object is essentially a tree, with lisp-list structure as defined in class.  For
-example, (1 2) or (1 . (2 . NIL)) will be store internally as the following binary tree:
+example, (1 2) or (1 . (2 . NIL)) will be stored internally as the following binary tree:
 
                .
               / \
@@ -23,8 +23,8 @@ example, (1 2) or (1 . (2 . NIL)) will be store internally as the following bina
                 / \
                2  NIL
 
-where 1 and 2 can be similar binary trees as well.  All data, including code, is represented as an 
-s_expression and the output is also printed as s_expressions.
+where 1 and 2 can be similar binary trees, or just leafs or atoms.  All data, including code, is
+represented as an s_expression and the output is also printed as s_expressions.
 
     The interpreter class also contains a 'symbol_table' object which defines the scope and bindings
 of identifier's values.  It works like a stack, with the most recent scope on top, and allowing the
