@@ -29,8 +29,6 @@ class tokenizer {
     token get();
     // Get the current line number.
     int lineno();
-    // Print a prompt is output is not being redirected.
-    void print_prompt();
 };
 
 #endif

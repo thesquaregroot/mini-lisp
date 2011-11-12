@@ -15,7 +15,26 @@ Building and Running
 redirection to and from files works just as well as enter expressions one at a time via the
 command-line.  After each expression is collected from input, the result of evaluating it is
 printed.  An EOF is required to exit the program properly.  When entering expressions manually, this
-can be done with 'ctrl-d'.
+can be done with 'ctrl-d'.  As an additional feature, when input is not being re-directed prompts
+are printed to aid the user in differentiating input and output.  For example, the following is an
+example of a command-line interaction:
+
+   |>> (DEFUN FIB (X)
+   |        (COND
+   |            ((EQ X 0) 0)
+   |            ((EQ X 1) 1)
+   |            (T        (PLUS (FIB (MINUS X 1)) (FIB (MINUS X 2))))
+   |        ))
+   |FIB
+   |>> (FIB 20)
+   |6765
+
+While the same program, when redirected from a file would give the folling output:
+
+    |FIB
+    |6765
+
+And of course, as stated above, this output could be redirected to a file as-is.
 
 ------------------
 Design Description

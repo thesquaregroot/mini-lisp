@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "../h/itos.h"
 #include "../h/interpreter.h"
 using namespace std;
@@ -571,10 +572,20 @@ interpreter::~interpreter() {
 }
 
 bool interpreter::exec() {
-    token t = ins.get();
-    while (t.type != F_END) {
-    //    ins.print_prompt();
-
+    bool redirected = !isatty(fileno(stdin));
+    while (true) {
+        // print a prompt if input is not being redirected
+        if (!redirected) {
+            // cerr so output won't get redirected
+            cerr << ">> ";
+        }
+        token t = ins.get();
+        if (t.type == F_END) {
+            // valid end of file
+            if (!redirected) cerr << endl << "Bye." << endl;
+            return true;
+        }
+        // not EOF, get expression
         s_expression* s = get_expr(t);
         if (s == NULL) {
             // error
@@ -588,9 +599,6 @@ bool interpreter::exec() {
         }
         // print result
         cout << s->to_string() << endl;
-
-        // get beginning of next expression (or EOF).
-        t = ins.get();
     }
     return true;
 }

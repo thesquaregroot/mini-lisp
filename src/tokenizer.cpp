@@ -137,8 +137,3 @@ int tokenizer::lineno() {
     return line;
 }
 
-void tokenizer::print_prompt() {
-    if (isatty(fileno(stdin))) {
-        cerr << ">> ";
-    }
-}

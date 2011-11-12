@@ -32,7 +32,7 @@ o/%.o : src/%.cpp
 	$(COMPILE) -o $@ $<
 
 clean:
-	rm -f o/*.o ./lisp
+	rm -f o/*.o ./$(EXE)
 	rmdir o
 
 # DO NOT DELETE
