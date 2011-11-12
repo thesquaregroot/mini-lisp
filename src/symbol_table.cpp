@@ -2,8 +2,7 @@
 using namespace std;
 
 // std::vector<std::map<std::string, s_expression*> > vars;
-// std::map<std::string, s_expression*> params;
-// std::map<std::string, s_expression*> bodies;
+// std::map<definition, s_expression*> funcs;
 
 // public
 s_expression* symbol_table::get(string& name) {
@@ -28,7 +27,22 @@ void symbol_table::pop() {
     vars.pop_back();
 }
 
-s_expression* symbol_table::eval(s_expression*) {
-    return NULL;    
+void symbol_table::define(string& name, s_expression* args, s_expression* body) {
+    definition def = definition(name, args->size());
+    s_expression* s = new s_expression();
+    s->car() = args;
+    s->cdr() = body;
+    funcs[def] = s;
+}
+
+/* Returns the arguments and boyd of a function with the given name and number of arguments
+//  in the following structure of s-expression:
+//     .
+//    / \
+// args body
+*/
+s_expression* symbol_table::retrieve(string& name, int arg_count) {
+    definition def = definition(name, arg_count);
+    return funcs[def];
 }
 

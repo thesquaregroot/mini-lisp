@@ -5,15 +5,14 @@
 #include <map>
 #include <string>
 #include "s_expression.h"
-#include "token.h"
+#include "definition.h"
 
 class symbol_table {
   private:
     // variables
     std::vector<std::map<std::string, s_expression*> > vars;
     // functions
-    std::map<std::string, std::vector<std::string> > params;
-    std::map<std::string, s_expression*> bodies;
+    std::map<definition, s_expression*> funcs;
 
   public:
     // Add another level to the stack.
@@ -27,9 +26,14 @@ class symbol_table {
     void set(std::string&, s_expression*);
 
     // Define a function with a name, parameters, and body
-    void define(std::string, std::vector<std::string>&, s_expression*);
-    // Call a function with the given parameters and enviroment
-    s_expression* eval(s_expression*);
+    void define(std::string&, s_expression*, s_expression*);
+    /* Returns the arguments and boyd of a function with the given name and number of arguments
+    //  in the following structure of s-expression:
+    //     .
+    //    / \
+    // args body
+    */
+    s_expression* retrieve(std::string&, int);
 };
 
 #endif

@@ -23,12 +23,14 @@ class tokenizer {
     // Create a tokenizer defaulting on standard input.
     tokenizer(bool = false);
     // Create a tokenizer with the given input stream.
-    tokenizer(std::istream*);
+    tokenizer(std::istream*, bool = false);
 
     // Get the next token from the input stream.
     token get();
     // Get the current line number.
     int lineno();
+    // Print a prompt is output is not being redirected.
+    void print_prompt();
 };
 
 #endif

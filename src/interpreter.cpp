@@ -4,7 +4,7 @@ using namespace std;
 
 // symbol_table symbols;
 // tokenizer ins;
-// token err_tkn;
+// token* err_tkn;
 // std::string err_msg;
 
 /// private
@@ -12,51 +12,67 @@ using namespace std;
 s_expression* interpreter::eval(s_expression* s) {
     s_expression *r = NULL;
 
-    if (s->is_leaf() && s->type() != IDENT) {
-        // echo numbers and booleans
-        return s;
-
+    if (s->is_leaf()) {
+        if (s->type() == IDENT) {
+            // look up identifier
+            string str = s->to_string();
+            r = symbols.get(str);
+        } else {
+            // echo numbers and booleans
+            r = s;
+        }
     } else {
         // Test for leaf with function name
-        if (s->car() == NULL || s->car()->is_leaf()) {
-            err_msg = "First element of an expression must be a function name.";
+        if (!s->is_list()) {
+            err_msg = "Input must be a string of lists.";
             return NULL;
 
         } else {
             // evalute the s_expression
             string exp = (*s)[0]->to_string();
 
-            if (exp == "CAR") {
+            if (exp == "CAR") {               // CAR
+                if (s->size() != 2) {
+                    err_msg = "CAR: Expected 1 argument, recieved " + itos(s->size()-1) + ".";
+                    return NULL;
+                }
+                r = eval((*s)[1]);
+                if (r->is_leaf()) {
+                    err_msg = "CAR: Exepected a list, recieved an atom.";
+                    return NULL;
+                }
+                r = r->car();
 
-            } else if (exp == "CDR") {
+            } else if (exp == "CDR") {        // CAR
+                
 
-            } else if (exp == "CONS") {
+            } else if (exp == "CONS") {       // CONS
 
-            } else if (exp == "EQ") {
+            } else if (exp == "EQ") {         // EQ
 
-            } else if (exp == "NULL") {
+            } else if (exp == "NULL") {       // NULL
 
-            } else if (exp == "INT") {
+            } else if (exp == "INT") {        // INT
 
-            } else if (exp == "PLUS") {
+            } else if (exp == "PLUS") {       // PLUS
 
-            } else if (exp == "MINUS") {
+            } else if (exp == "MINUS") {      // MINUS
                 
-            } else if (exp == "QUOTIENT") {
+            } else if (exp == "QUOTIENT") {   // QUOTIENT
                 
-            } else if (exp == "REMAINDER") {
+            } else if (exp == "REMAINDER") {  // REMAINDER
                 
-            } else if (exp == "LESS") {
+            } else if (exp == "LESS") {       // LESS
                 
-            } else if (exp == "GREATER") {
+            } else if (exp == "GREATER") {    // GREATER
                 
-            } else if (exp == "COND") {
+            } else if (exp == "COND") {       // COND
                 
-            } else if (exp == "QUOTE") {
+            } else if (exp == "QUOTE") {      // QUOTE
                 
-            } else if (exp == "DEFUN") {
+            } else if (exp == "DEFUN") {      // DEFUN
                 
-            } else {
+            } else {                          // USER-DEFINED FUNCTION CALL
                 // lookup in symbol table
                                 
             }
@@ -67,7 +83,7 @@ s_expression* interpreter::eval(s_expression* s) {
 
 s_expression* interpreter::get_expr(token start) {
     if (start.type != L_PAREN && start.type != ATOM) {
-        err_tkn = &start;
+        err_tkn = new token(start);
         err_msg = "Invalid list element.";
         return NULL;
     }
@@ -91,7 +107,7 @@ s_expression* interpreter::get_expr(token start) {
     s_expression *r, *p;
     switch (t.type) {
         case ERROR:
-            err_tkn = &t;
+            err_tkn = new token(t);
             err_msg = "Unrecognized token.";
             return NULL;
             break;
@@ -107,7 +123,7 @@ s_expression* interpreter::get_expr(token start) {
                 // must be end of expression
                 t = ins.get();
                 if (t.type != R_PAREN) {
-                    err_tkn = &t;
+                    err_tkn = new token(t);
                     err_msg = "Invalid use of dot operator.";
                     return NULL;
                 }
@@ -144,7 +160,7 @@ s_expression* interpreter::get_list(token start) {
     switch(t.type) {
         case ERROR:
         case DOT:
-            err_tkn = &t;
+            err_tkn = new token(t);
             if (t.type == DOT) {
                 err_msg = "Invalid use of dot operator.";
             } else { // ERROR
@@ -183,6 +199,8 @@ interpreter::~interpreter() {
 bool interpreter::exec() {
     token t = ins.get();
     while (t.type != F_END) {
+    //    ins.print_prompt();
+
         s_expression* s = get_expr(t);
         if (s == NULL) {
             // error
@@ -204,14 +222,15 @@ bool interpreter::exec() {
 }
 
 string interpreter::error() {
-    if (err_tkn != NULL && err_tkn->type == F_END) {
-        // override error message in this case
-        err_msg = "Unexpected end of file.";
-    }
     string s = "ERROR: ";
     if (err_tkn != NULL) {
+        if (err_tkn->type == F_END) {
+            // override error message in this case
+            err_msg = "Unexpected end of file.";
+        }
         // only show token if it is related to the error
         s += "At token `" + err_tkn->lex_val + "` on line " + itos(ins.lineno()) + ": ";
+
     } else {
         // otherwise just display the line number
         s += "On line " + itos(ins.lineno()) + ": ";

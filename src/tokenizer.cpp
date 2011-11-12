@@ -1,4 +1,5 @@
 #include <cctype>
+#include <unistd.h> // for isatty
 #include "../h/tokenizer.h"
 using namespace std;
 
@@ -34,9 +35,10 @@ tokenizer::tokenizer(bool vrbs) {
     verbose = vrbs;
 }
 
-tokenizer::tokenizer(istream* in) {
+tokenizer::tokenizer(istream* in, bool vrbs) {
     ins = in;
     line = 1;
+    verbose = vrbs;
 }
 
 token tokenizer::get() {
@@ -74,6 +76,7 @@ token tokenizer::get() {
         case '+':
             // save +/-
             t.lex_val += look_ahead;
+            look_ahead = next();
         case '1':
             if (isdigit(look_ahead)) {
                 t.lex_val += look_ahead;
@@ -134,3 +137,8 @@ int tokenizer::lineno() {
     return line;
 }
 
+void tokenizer::print_prompt() {
+    if (isatty(fileno(stdin))) {
+        cerr << ">> ";
+    }
+}
