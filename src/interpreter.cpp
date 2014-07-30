@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <cstdio>
 #include "../h/itos.h"
 #include "../h/interpreter.h"
 using namespace std;
@@ -204,7 +205,7 @@ s_expression* interpreter::eval(s_expression* s) {
                     return NULL;
                 }
                 r = new s_expression(token(ATOM, itos(s1->value() - s2->value())));
-                
+
             } else if (exp == "TIMES") {      // TIMES //
                 if (s->size() != 3) {
                     err_msg = "TIMES: Expeceted 2 arguments, received " + itos(s->size()-1) + ".";
@@ -254,7 +255,7 @@ s_expression* interpreter::eval(s_expression* s) {
                     return NULL;
                 }
                 r = new s_expression(token(ATOM, itos(s1->value() / s2->value())));
-                
+
             } else if (exp == "REMAINDER") {  // REMAINDER //
                 if (s->size() != 3) {
                     err_msg = "REMAINDER: Expeceted 2 arguments, received " + itos(s->size()-1) + ".";
@@ -279,7 +280,7 @@ s_expression* interpreter::eval(s_expression* s) {
                     return NULL;
                 }
                 r = new s_expression(token(ATOM, itos(s1->value() % s2->value())));
-                
+
             } else if (exp == "LESS") {       // LESS //
                 if (s->size() != 3) {
                     err_msg = "LESS: Expeceted 2 arguments, received " + itos(s->size()-1) + ".";
@@ -304,7 +305,7 @@ s_expression* interpreter::eval(s_expression* s) {
                     return NULL;
                 }
                 r = new s_expression(token(ATOM, (s1->value() < s2->value())?"T":"NIL" ) );
-                
+
             } else if (exp == "GREATER") {    // GREATER //
                 if (s->size() != 3) {
                     err_msg = "GREATER: Expeceted 2 arguments, received " + itos(s->size()-1) + ".";
@@ -329,7 +330,7 @@ s_expression* interpreter::eval(s_expression* s) {
                     return NULL;
                 }
                 r = new s_expression(token(ATOM, (s1->value() > s2->value())?"T":"NIL" ) );
-                
+
             } else if (exp == "COND") {       // COND //
                 if (s->size() == 1) {
                     err_msg = "COND: No arguments given.";
@@ -361,7 +362,7 @@ s_expression* interpreter::eval(s_expression* s) {
                         err_msg = "COND: No arguments evaluated to true.";
                         return NULL;
                     }
-                } 
+                }
 
             } else if (exp == "QUOTE") {      // QUOTE //
                 if (s->size() != 2) {
@@ -370,7 +371,7 @@ s_expression* interpreter::eval(s_expression* s) {
                 }
                 // nothing to do or check!
                 r = (*s)[1];
-                
+
             } else if (exp == "DEFUN") {      // DEFUN //
                 if (s->size() != 4) {
                     err_msg = "DEFUN: Expected 4 arguments, recieved " + itos(s->size()-1) + ".";
@@ -444,7 +445,7 @@ s_expression* interpreter::eval(s_expression* s) {
                     return NULL;
                 }
                 symbols.pop();
- 
+
             }
         }
     }
